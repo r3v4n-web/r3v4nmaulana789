@@ -328,6 +328,7 @@ async function enterApp() {
   await loadData();
   $("login-screen").style.display = "none";
   $("app").style.display = "flex";
+  document.body.classList.add("in-app"); // dipakai CSS desktop untuk menaruh tombol tema di sidebar
   applyRoleUI();
   renderAll();
   goToPage(ROLE_ACCESS[currentUser.role].home);
@@ -373,6 +374,7 @@ $("logout-btn").addEventListener("click", () => {
   $("paid-input").value = "";
   $("app").style.display = "none";
   $("login-screen").style.display = "flex";
+  document.body.classList.remove("in-app");
   $("login-form").reset();
   showLoginError("");
 });
