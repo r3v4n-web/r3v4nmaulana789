@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Smart Cashier — Vanilla JS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<button id="theme-toggle-floating" title="Ganti mode gelap/terang"></button>
+
+<div id="login-screen">
+  <div class="box">
+    <div class="icon">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/>
+        <path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17"/>
+        <path d="M8 3.5c-.6.6-.6 1.4 0 2s.6 1.4 0 2"/>
+        <path d="M12 3.5c-.6.6-.6 1.4 0 2s.6 1.4 0 2"/>
+      </svg>
+    </div>
+    <h1>Masuk ke Smart Cashier</h1>
+    <p>Kelola transaksi tokomu dari sini</p>
+    <form id="login-form">
+      <label>Username</label>
+      <input id="login-username" placeholder="Masukkan username" autocomplete="username" autocapitalize="none" spellcheck="false">
+      <label>Password</label>
+      <input id="login-password" type="password" placeholder="••••••••" autocomplete="current-password">
+      <div id="login-error" style="display:none;"></div>
+      <button type="submit">Masuk</button>
+      <p id="login-hint">Lupa password? Hubungi owner toko.</p>
+    </form>
+  </div>
+</div>
+
+<div id="app" style="display:none;">
+  <div id="sidebar">
+    <div class="brand">
+      <svg class="logo-mark" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8h13v6a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/>
+        <path d="M17 9h1.5a2.5 2.5 0 0 1 0 5H17"/>
+        <path d="M8 3.5c-.6.6-.6 1.4 0 2s.6 1.4 0 2"/>
+        <path d="M12 3.5c-.6.6-.6 1.4 0 2s.6 1.4 0 2"/>
+      </svg>
+      <div class="brand-text">
+        <div class="name">Smart Cashier</div>
+        <div class="shop">Saerah Coffe House</div>
+      </div>
+    </div>
+    <nav>
+      <button data-page="kasir" class="active">🛒 Kasir</button>
+      <button data-page="produk">📦 Produk</button>
+      <button data-page="bahanbaku">🌾 Stok Bahan Baku</button>
+      <button data-page="absensi">🧑‍💼 Absensi</button>
+      <button data-page="riwayat">🕘 Riwayat</button>
+      <button data-page="laporan">📊 Laporan</button>
+    </nav>
+    <div class="logout-wrap">
+      <div id="user-info" style="font-size:12px; font-weight:500; padding:4px 4px 2px; text-align:center; color:#F3E9DC;"></div>
+      <div id="db-status" style="font-size:11px; padding:0 4px 10px; text-align:center;"></div>
+      <button class="logout" id="logout-btn">↩ Keluar</button>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <div id="page-kasir" class="active">
+      <div class="kasir-left">
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input id="product-search" placeholder="Cari produk berdasarkan nama atau kode...">
+        </div>
+        <div id="category-tabs" class="category-tabs">
+          <button data-cat="Semua" class="cat-tab active">Semua</button>
+          <button data-cat="Coffee" class="cat-tab">☕ Coffee</button>
+          <button data-cat="Non Coffee" class="cat-tab">🥤 Non Coffee</button>
+          <button data-cat="Camilan/Snack" class="cat-tab">🍪 Camilan/Snack</button>
+          <button data-cat="Makanan Berat" class="cat-tab">🍛 Makanan Berat</button>
+        </div>
+        <div id="product-grid"></div>
+      </div>
+      <div class="kasir-right">
+        <div class="cart-header">Keranjang</div>
+        <div id="cart-items"></div>
+        <div class="cart-summary">
+          <div class="sum-row">
+            <span>Diskon (%)</span>
+            <input type="number" id="discount-input" min="0" max="100" value="0">
+          </div>
+          <div class="sum-row">
+            <span>Pajak (%)</span>
+            <input type="number" id="tax-input" min="0" max="100" value="0">
+          </div>
+          <div class="sum-row"><span>Subtotal</span><span id="subtotal-val">Rp0</span></div>
+          <div class="sum-row total"><span>Total</span><span class="val" id="total-val">Rp0</span></div>
+          <div class="pay-methods">
+            <button data-pay="Tunai" class="selected">Tunai</button>
+            <button data-pay="Non-tunai">Non-tunai</button>
+          </div>
+          <div id="cash-input-wrap" class="sum-row">
+            <span>Nominal Bayar</span>
+            <input type="number" id="paid-input" min="0" placeholder="0">
+          </div>
+          <div id="change-row" class="sum-row">
+            <span>Kembalian</span>
+            <span id="change-val">Rp0</span>
+          </div>
+          <div id="paid-error"></div>
+          <button id="finish-btn">Selesaikan Transaksi</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-produk" class="page">
+      <div class="page-head">
+        <div>
+          <h1>Produk</h1>
+          <p id="product-count">0 produk terdaftar</p>
+        </div>
+        <button id="add-product-btn">+ Tambah Produk</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Nama</th><th>Kode</th><th>Kategori</th><th style="text-align:right">Harga</th><th style="text-align:right">Stok</th><th style="text-align:right">Aksi</th></tr>
+        </thead>
+        <tbody id="product-table-body"></tbody>
+      </table>
+    </div>
+
+    <div id="page-bahanbaku" class="page">
+      <div class="page-head">
+        <div>
+          <h1>Stok Bahan Baku</h1>
+          <p id="material-count">0 bahan baku terdaftar</p>
+        </div>
+        <button id="add-material-btn">+ Tambah Bahan Baku</button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Bahan</th><th>Satuan</th>
+            <th style="text-align:right">Stok Saat Ini</th>
+            <th style="text-align:right">Stok Minimum</th>
+            <th style="text-align:right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="material-table-body"></tbody>
+      </table>
+    </div>
+
+    <div id="page-absensi" class="page">
+      <div class="page-head">
+        <div>
+          <h1>Absensi</h1>
+          <p id="absensi-date"></p>
+        </div>
+        <button id="add-employee-btn">+ Tambah Karyawan</button>
+      </div>
+
+      <div class="attendance-section">
+        <h2>Absen hari ini</h2>
+        <div id="attendance-grid"></div>
+      </div>
+
+      <div class="attendance-section">
+        <div class="page-head" style="margin-bottom:12px;">
+          <h2 style="margin:0;">Riwayat Absensi</h2>
+          <select id="attendance-filter">
+            <option value="">Semua karyawan</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Foto</th><th>Tanggal</th><th>Nama</th><th>Peran</th>
+              <th>Jam Masuk</th><th>Jam Pulang</th>
+              <th id="attendance-action-th" style="text-align:right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="attendance-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-riwayat" class="page">
+      <h1 style="font-size:17px;margin:0 0 2px;">Riwayat Transaksi</h1>
+      <p id="trx-count" style="font-size:12px;color:#9C9A8F;margin:0 0 20px;">0 transaksi tercatat</p>
+      <div id="trx-list"></div>
+    </div>
+
+    <div id="page-laporan" class="page">
+      <div class="page-head">
+        <div>
+          <h1 id="report-title">Laporan</h1>
+          <p id="report-date"></p>
+        </div>
+      </div>
+
+      <div class="report-tabs" id="report-tabs">
+        <button class="report-tab active" data-rtab="penjualan">📊 Penjualan</button>
+        <button class="report-tab" data-rtab="pengeluaran">💸 Pengeluaran</button>
+      </div>
+
+      <!-- Tab Penjualan (isi lama) -->
+      <div id="report-penjualan" class="report-pane active">
+        <div class="stat-grid" id="stat-grid"></div>
+        <div class="report-box">
+          <h2>Produk terlaris</h2>
+          <div id="top-products"></div>
+        </div>
+      </div>
+
+      <!-- Tab Pengeluaran (baru) -->
+      <div id="report-pengeluaran" class="report-pane">
+        <div class="stat-grid" id="expense-stat-grid"></div>
+
+        <div class="report-box" id="profit-box">
+          <h2>Ringkasan bulan ini</h2>
+          <div id="profit-summary"></div>
+        </div>
+
+        <div class="report-box">
+          <h2>Pengeluaran per kategori (bulan ini)</h2>
+          <div id="expense-by-category"></div>
+        </div>
+
+        <div class="page-head expense-list-head">
+          <h2>Daftar Pengeluaran</h2>
+          <div class="expense-tools">
+            <select id="expense-filter">
+              <option value="">Semua kategori</option>
+            </select>
+            <button id="add-expense-btn">+ Catat Pengeluaran</button>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th><th>Kategori</th><th>Keterangan</th>
+              <th style="text-align:right">Jumlah</th>
+              <th style="text-align:right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="expense-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="modal-overlay" id="receipt-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title">✓ Transaksi berhasil</div>
+      <button id="receipt-x">✕</button>
+    </div>
+    <div class="receipt" id="receipt-content"></div>
+    <div class="receipt-actions">
+      <button id="receipt-print">🖨 Cetak Struk</button>
+      <button id="receipt-close">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="product-form-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title" id="product-form-title">Tambah Produk</div>
+      <button id="product-form-x">✕</button>
+    </div>
+    <form id="product-form">
+      <label>Nama produk</label>
+      <input id="pf-name" required>
+      <label>Kode barang</label>
+      <input id="pf-code" required>
+      <label>Kategori</label>
+      <select id="pf-category">
+        <option value="Coffee">☕ Coffee</option>
+        <option value="Non Coffee">🥤 Non Coffee</option>
+        <option value="Camilan/Snack">🍪 Camilan/Snack</option>
+        <option value="Makanan Berat">🍛 Makanan Berat</option>
+      </select>
+      <div class="form-row2">
+        <div>
+          <label>Harga</label>
+          <input id="pf-price" type="number" required>
+        </div>
+        <div>
+          <label>Stok</label>
+          <input id="pf-stock" type="number" required>
+        </div>
+      </div>
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="employee-form-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title" id="employee-form-title">Tambah Karyawan</div>
+      <button id="employee-form-x">✕</button>
+    </div>
+    <form id="employee-form">
+      <label>Nama</label>
+      <input id="ef-name" required>
+      <label>Peran</label>
+      <select id="ef-role">
+        <option value="Kasir">Kasir</option>
+        <option value="Karyawan">Karyawan</option>
+        <option value="Owner">Owner</option>
+      </select>
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="material-form-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title" id="material-form-title">Tambah Bahan Baku</div>
+      <button id="material-form-x">✕</button>
+    </div>
+    <form id="material-form">
+      <label>Nama bahan baku</label>
+      <input id="mf-name" placeholder="Contoh: Biji Kopi Arabika" required>
+      <label>Satuan</label>
+      <select id="mf-unit">
+        <option value="kg">kg</option>
+        <option value="gram">gram</option>
+        <option value="liter">liter</option>
+        <option value="ml">ml</option>
+        <option value="pcs">pcs</option>
+      </select>
+      <div class="form-row2">
+        <div>
+          <label>Stok saat ini</label>
+          <input id="mf-stock" type="number" step="any" required>
+        </div>
+        <div>
+          <label>Stok minimum</label>
+          <input id="mf-min-stock" type="number" step="any" required>
+        </div>
+      </div>
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="stock-adjust-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title">Sesuaikan Stok</div>
+      <button id="stock-adjust-x">✕</button>
+    </div>
+    <p id="stock-adjust-current" class="stock-adjust-current"></p>
+    <form id="stock-adjust-form">
+      <div class="pay-methods">
+        <button type="button" data-adjust="in" class="selected">+ Stok Masuk</button>
+        <button type="button" data-adjust="out">− Stok Keluar</button>
+      </div>
+      <label>Jumlah</label>
+      <input id="sa-amount" type="number" step="any" min="0" required>
+      <label>Catatan (opsional)</label>
+      <input id="sa-note" placeholder="Contoh: Belanja mingguan / rusak / kadaluarsa">
+      <button type="submit">Simpan Perubahan Stok</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="expense-form-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title" id="expense-form-title">Catat Pengeluaran</div>
+      <button id="expense-form-x">✕</button>
+    </div>
+    <form id="expense-form">
+      <div class="form-row2">
+        <div>
+          <label>Tanggal</label>
+          <input id="xf-date" type="date" required>
+        </div>
+        <div>
+          <label>Kategori</label>
+          <select id="xf-category"></select>
+        </div>
+      </div>
+      <label>Keterangan</label>
+      <input id="xf-note" placeholder="Contoh: Beli galon, bayar listrik" required>
+      <label>Jumlah (Rp)</label>
+      <input id="xf-amount" type="number" min="1" step="any" placeholder="0" required>
+      <button type="submit">Simpan</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal-overlay" id="camera-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title" id="camera-title">Ambil Foto Absen</div>
+      <button id="camera-x">✕</button>
+    </div>
+    <div class="camera-frame">
+      <video id="camera-video" autoplay playsinline></video>
+      <img id="camera-preview" style="display:none;">
+    </div>
+    <canvas id="camera-canvas" style="display:none;"></canvas>
+    <p id="camera-error" class="camera-error"></p>
+    <div class="receipt-actions">
+      <button id="camera-retake" style="display:none;">↺ Ambil Ulang</button>
+      <button id="camera-shoot">📷 Ambil Foto</button>
+      <button id="camera-confirm" style="display:none;">✓ Gunakan Foto</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="photo-viewer-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="title">Foto Absen</div>
+      <button id="photo-viewer-x">✕</button>
+    </div>
+    <img id="photo-viewer-img" src="">
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="script.js"></script>
+</body>
+</html>
