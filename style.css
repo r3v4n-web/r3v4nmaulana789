@@ -529,3 +529,320 @@
   .trx-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
   .trx-item .trx-row { flex: 1; width: auto; margin-bottom: 0; }
   .trx-item .trx-del { flex-shrink: 0; font-size: 16px; padding: 10px; }
+
+  /* ---------- Elemen yang gayanya dipindah dari inline ke CSS ---------- */
+  #user-info { font-size: 12px; font-weight: 500; padding: 4px 4px 2px; text-align: center; color: #F3E9DC; }
+  #user-info::after { content: " · " attr(data-role); }
+  #db-status { font-size: 11px; padding: 0 4px 10px; text-align: center; }
+  .cart-header { display: flex; justify-content: space-between; align-items: center; }
+  #cart-close, #cart-bar, #cart-backdrop { display: none; }
+  #sidebar nav button, #sidebar .logout { gap: 4px; }   /* sama seperti spasi biasa di desktop */
+  #sidebar .logout .lo-ico { font-size: 14px; }
+
+
+  /* =====================================================================
+     TAMPILAN HP & TABLET KECIL (layar selebar 900px ke bawah)
+     Desktop tidak berubah. Di HP:
+       - sidebar jadi bilah atas (nama toko, pengguna, keluar) + menu di bawah
+       - halaman Kasir: produk 2 kolom, keranjang naik dari bawah
+       - tabel berubah jadi kartu agar tidak perlu geser ke samping
+       - form berupa panel dari bawah, tombol & isian cukup besar untuk jari
+     ===================================================================== */
+  @media (max-width: 900px) {
+    html { -webkit-text-size-adjust: 100%; }
+    body { -webkit-tap-highlight-color: transparent; overscroll-behavior-y: none; }
+    button, select, input, label { touch-action: manipulation; }
+
+    /* Ukuran 16px mencegah iOS memperbesar layar sendiri saat kolom diketuk */
+    input, select, textarea { font-size: 16px !important; }
+
+    /* ----- Tombol tema ----- */
+    #theme-toggle-floating {
+      top: calc(env(safe-area-inset-top, 0px) + 10px); right: 10px;
+      width: 36px; height: 36px; font-size: 15px; z-index: 40;
+    }
+
+    /* ----- Login ----- */
+    #login-screen {
+      height: auto; min-height: 100vh; min-height: 100dvh;
+      border: none; border-radius: 0; padding: 64px 16px 32px;
+    }
+    #login-screen form { padding: 20px; }
+    #login-screen input { padding: 13px 12px; }
+    #login-screen button { padding: 14px; font-size: 16px; }
+
+    /* ----- Kerangka aplikasi: bilah atas, isi, menu bawah ----- */
+    #app {
+      position: relative; flex-direction: column;
+      height: 100vh; height: 100dvh; border: none; border-radius: 0;
+    }
+    #sidebar { display: contents; }   /* anak-anak sidebar jadi bagian #app */
+
+    #sidebar .brand {
+      order: 1; flex: 0 0 auto; align-items: center; gap: 10px;
+      min-height: calc(56px + env(safe-area-inset-top, 0px));
+      padding: env(safe-area-inset-top, 0px) 164px 0 14px;
+      background: #2B1B12; color: #F3E7D6;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    #sidebar .brand .logo-mark { width: 30px; height: 30px; margin-top: 0; }
+    #sidebar .brand .brand-text { min-width: 0; }
+    #sidebar .brand .name { display: none; }
+    #sidebar .brand .shop {
+      margin-top: 0; font-family: "Poppins", sans-serif; font-size: 13.5px; font-weight: 600;
+      line-height: 1.2; color: #F3E7D6;
+    }
+
+    #sidebar .logout-wrap {
+      position: absolute; z-index: 5;
+      top: env(safe-area-inset-top, 0px); right: 54px; height: 56px;
+      display: flex; align-items: center; gap: 8px; padding: 0; border: none;
+    }
+    #user-info {
+      max-width: 84px; padding: 0; text-align: right; line-height: 1.25;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    #user-info::after { content: attr(data-role); display: block; font-size: 10px; font-weight: 400; color: #C9A987; }
+    #db-status { padding: 0; font-size: 0; line-height: 1; }   /* hanya titik status */
+    #db-status::before { content: "●"; font-size: 11px; }
+    #sidebar .logout {
+      width: 36px; height: 36px; padding: 0; justify-content: center; gap: 0;
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 10px;
+    }
+    #sidebar .logout .lo-text { display: none; }
+    #sidebar .logout .lo-ico { font-size: 16px; }
+
+    #content { order: 2; flex: 1 1 auto; min-height: 0; height: auto; display: flex; flex-direction: column; }
+    .page { height: auto; }
+    .page.active { display: block; flex: 1 1 0; min-height: 0; }
+    #page-produk, #page-bahanbaku, #page-absensi, #page-riwayat, #page-laporan {
+      padding: 16px 12px 28px; -webkit-overflow-scrolling: touch;
+    }
+
+    #sidebar nav {
+      order: 3; flex: 0 0 auto; flex-direction: row; gap: 2px;
+      padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+      background: #2B1B12; border-top: 1px solid rgba(255,255,255,0.12);
+      position: relative; z-index: 20;
+    }
+    #sidebar nav button {
+      flex: 1 1 0; min-width: 0; min-height: 52px; padding: 6px 2px; gap: 2px;
+      flex-direction: column; justify-content: center; align-items: center;
+      border-radius: 10px; font-size: 10px; line-height: 1.15; text-align: center;
+    }
+    #sidebar nav button .ni { font-size: 19px; line-height: 1; }
+    #sidebar nav button .nl { display: block; max-width: 100%; overflow-wrap: anywhere; }
+
+    /* ----- Kasir ----- */
+    #page-kasir { position: relative; }
+    .kasir-left { padding: 12px 12px 0; }
+    .search-wrap { margin-bottom: 10px; }
+    .search-wrap input { padding: 12px 12px 12px 36px; }
+    .category-tabs {
+      flex-wrap: nowrap; overflow-x: auto; margin: 0 -12px 12px; padding: 0 12px 2px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .category-tabs::-webkit-scrollbar { display: none; }
+    .cat-tab { flex: 0 0 auto; padding: 9px 14px; font-size: 13px; }
+
+    #product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding-bottom: 88px; }
+    .product-card { padding: 12px; min-width: 0; }
+    .product-card .prow { gap: 6px; flex-wrap: wrap; }
+    .product-card:active { transform: scale(0.98); }
+
+    /* bar ringkas keranjang */
+    #page-kasir.has-items #cart-bar { display: flex; }
+    #cart-bar {
+      position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 10;
+      align-items: center; justify-content: space-between; gap: 10px;
+      background: var(--accent); color: var(--accent-contrast); border: none; border-radius: 14px;
+      padding: 12px 16px; cursor: pointer; text-align: left;
+      box-shadow: 0 8px 22px rgba(46,33,24,0.28);
+    }
+    #cart-bar .cb-info { display: flex; flex-direction: column; gap: 1px; }
+    #cart-bar .cb-count { font-size: 14px; font-weight: 600; }
+    #cart-bar .cb-hint { font-size: 11px; opacity: 0.85; }
+    #cart-bar .cb-total { font-size: 17px; font-weight: 700; }
+
+    /* keranjang = panel yang naik dari bawah */
+    .kasir-right {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 70;
+      width: auto; height: auto; max-height: 90vh; max-height: 90dvh; overflow: hidden;
+      border-left: none; border-top: 1px solid var(--border); border-radius: 18px 18px 0 0;
+      box-shadow: 0 -12px 40px rgba(46,33,24,0.3);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      transform: translateY(105%); visibility: hidden;
+      transition: transform 0.25s ease, visibility 0s linear 0.25s;
+    }
+    #page-kasir.cart-open .kasir-right { transform: translateY(0); visibility: visible; transition: transform 0.25s ease; }
+    #cart-backdrop { position: fixed; inset: 0; z-index: 65; background: rgba(0,0,0,0.4); }
+    #page-kasir.cart-open #cart-backdrop { display: block; }
+    #cart-close { display: block; background: none; border: none; font-size: 18px; color: var(--text-muted); padding: 4px 8px; cursor: pointer; }
+    .cart-header { padding: 14px 16px 14px 20px; }
+
+    #cart-items { min-height: 0; }
+    .cart-item { gap: 10px; padding: 10px 0; }
+    .cart-item .ci-name { font-size: 14px; }
+    .cart-item .ci-price { font-size: 12px; }
+    .cart-item button.qty-btn, .cart-item button.rm-btn { width: 34px; height: 34px; font-size: 16px; }
+    .cart-item .qty-num { width: 24px; font-size: 14px; }
+    .cart-summary { padding: 12px 16px 14px; }
+    .sum-row { font-size: 14px; }
+    .sum-row input[type=number] { width: 84px; padding: 8px; }
+    #cash-input-wrap input { width: 140px; padding: 8px; }
+    .pay-methods button { padding: 12px; font-size: 14px; }
+    #finish-btn { padding: 14px; font-size: 15px; }
+
+    /* ----- Judul halaman & tombol ----- */
+    .page-head { flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+    .page-head h1 { font-size: 18px; }
+    #add-product-btn, #add-material-btn, #add-employee-btn, #add-expense-btn {
+      padding: 11px 14px; font-size: 14px;
+    }
+    #attendance-filter, #expense-filter { padding: 10px; max-width: 100%; }
+    .expense-list-head { margin: 20px 0 12px; }
+    .expense-tools { width: 100%; }
+    .expense-tools select { flex: 1; min-width: 0; }
+    .icon-btn { padding: 8px; font-size: 18px; min-width: 40px; min-height: 40px; }
+    .trx-item .trx-del { min-width: 44px; }
+    .stock-adjust-btn { width: 36px; height: 36px; font-size: 16px; }
+
+    /* ----- Absensi ----- */
+    #attendance-grid { grid-template-columns: 1fr; gap: 10px; }
+    .employee-card button.ec-btn { padding: 12px; font-size: 14px; }
+
+    /* ----- Riwayat transaksi ----- */
+    .trx-row { padding: 14px 12px; }
+    .trx-item .trx-del { padding: 12px; }
+
+    /* ----- Laporan ----- */
+    .stat-grid { grid-template-columns: 1fr; gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      display: grid; grid-template-columns: 1fr auto; grid-template-areas: "label val" "count val";
+      align-items: center; column-gap: 12px; padding: 12px 14px;
+    }
+    .stat-card .stat-label { grid-area: label; }
+    .stat-card .stat-count { grid-area: count; }
+    .stat-card .stat-val { grid-area: val; margin-top: 0; font-size: 18px; text-align: right; }
+    .bar-row { gap: 10px; }
+    .bar-row .bar-name { width: 92px; }
+    .bar-row .bar-qty { width: 54px; }
+    .bar-row .bar-qty.wide { width: 84px; }
+    .report-tabs { overflow-x: auto; scrollbar-width: none; }
+    .report-tab { padding: 9px 16px; font-size: 13px; }
+
+    /* ----- Tabel -> kartu ----- */
+    table, tbody { display: block; width: 100%; }
+    table { background: transparent; border: none; border-radius: 0; }
+    thead { display: none; }
+    tbody tr {
+      display: grid; column-gap: 12px; row-gap: 3px; align-items: center;
+      background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 12px 14px; margin-bottom: 10px; position: relative;
+    }
+    tbody td { display: block; padding: 0; border-bottom: none; min-width: 0; }
+    td.num { text-align: left; }
+
+    /* Produk: nama | harga  /  kode | stok  /  kategori | aksi */
+    #product-table-body tr {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "name price" "code stock" "cat act";
+    }
+    #product-table-body td:nth-child(1) { grid-area: name; font-size: 15px; font-weight: 600; }
+    #product-table-body td:nth-child(2) { grid-area: code; font-size: 12px; color: var(--text-muted); }
+    #product-table-body td:nth-child(3) { grid-area: cat; font-size: 12px; color: var(--text-tertiary); }
+    #product-table-body td:nth-child(4) { grid-area: price; text-align: right; font-weight: 600; color: var(--accent); }
+    #product-table-body td:nth-child(5) { grid-area: stock; text-align: right; font-size: 12px; }
+    #product-table-body td:nth-child(5)::before { content: "Stok: "; color: var(--text-muted); }
+    #product-table-body td:nth-child(6) { grid-area: act; text-align: right; }
+
+    /* Bahan baku: nama | stok  /  minimum | aksi  (kolom "satuan" sudah ada di angka stok) */
+    #material-table-body tr {
+      grid-template-columns: 1fr auto;
+      grid-template-areas: "name stock" "min act";
+    }
+    #material-table-body td:nth-child(1) { grid-area: name; font-size: 15px; font-weight: 600; }
+    #material-table-body td:nth-child(2) { display: none; }
+    #material-table-body td:nth-child(3) { grid-area: stock; text-align: right; font-weight: 600; }
+    #material-table-body td:nth-child(4) { grid-area: min; font-size: 12px; color: var(--text-muted); }
+    #material-table-body td:nth-child(4)::before { content: "Minimum: "; }
+    #material-table-body td:nth-child(5) { grid-area: act; text-align: right; white-space: nowrap; }
+
+    /* Pengeluaran: keterangan | jumlah  /  kategori, tanggal, aksi */
+    #expense-table-body tr {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "note note amount" "cat date act";
+    }
+    #expense-table-body td:nth-child(1) { grid-area: date; font-size: 12px; color: var(--text-muted); }
+    #expense-table-body td:nth-child(2) { grid-area: cat; }
+    #expense-table-body td:nth-child(3) { grid-area: note; font-size: 14px; font-weight: 500; }
+    #expense-table-body td:nth-child(4) { grid-area: amount; text-align: right; }
+    #expense-table-body td:nth-child(5) { grid-area: act; text-align: right; white-space: nowrap; }
+
+    /* Riwayat absensi: foto | nama  /  foto | tanggal, peran  /  foto | masuk, pulang */
+    #attendance-table-body tr {
+      grid-template-columns: auto 1fr 1fr;
+      grid-template-areas: "photo name name" "photo date role" "photo in out";
+      row-gap: 4px;
+    }
+    #attendance-table-body td:nth-child(1) { grid-area: photo; align-self: start; }
+    #attendance-table-body td:nth-child(2) { grid-area: date; font-size: 12px; color: var(--text-muted); }
+    #attendance-table-body td:nth-child(3) { grid-area: name; font-size: 15px; font-weight: 600; padding-right: 40px; }
+    #attendance-table-body td:nth-child(4) { grid-area: role; font-size: 12px; color: var(--text-tertiary); }
+    #attendance-table-body td:nth-child(5) { grid-area: in; font-size: 13px; }
+    #attendance-table-body td:nth-child(5)::before { content: "Masuk "; font-size: 12px; color: var(--text-muted); }
+    #attendance-table-body td:nth-child(6) { grid-area: out; font-size: 13px; }
+    #attendance-table-body td:nth-child(6)::before { content: "Pulang "; font-size: 12px; color: var(--text-muted); }
+    #attendance-table-body td:nth-child(7) { position: absolute; top: 6px; right: 6px; }
+
+    /* Baris "belum ada data" memenuhi lebar kartu */
+    #product-table-body td[colspan], #material-table-body td[colspan],
+    #expense-table-body td[colspan], #attendance-table-body td[colspan] {
+      grid-area: 1 / 1 / -1 / -1; text-align: center; font-size: 13px;
+    }
+
+    /* ----- Jendela (modal) ----- */
+    .modal-overlay { z-index: 80; }
+    .modal-box { max-height: 92vh; max-height: 92dvh; overflow-y: auto; }
+    .modal-head button { font-size: 20px; padding: 6px 10px; }
+    .modal-box input, .modal-box select { padding: 12px !important; }
+    .modal-box button[type=submit] { padding: 14px !important; font-size: 15px !important; }
+    .receipt-actions button { padding: 13px; font-size: 14px; }
+
+    /* Form tampil sebagai panel dari bawah (struk & foto tetap di tengah) */
+    #product-form-modal, #employee-form-modal, #material-form-modal,
+    #stock-adjust-modal, #expense-form-modal, #camera-modal { align-items: flex-end; padding: 0; }
+    #product-form-modal .modal-box, #employee-form-modal .modal-box, #material-form-modal .modal-box,
+    #stock-adjust-modal .modal-box, #expense-form-modal .modal-box, #camera-modal .modal-box {
+      max-width: none !important; border-radius: 18px 18px 0 0;
+      padding: 20px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+    }
+    .camera-frame { aspect-ratio: 3 / 4; max-height: 58vh; max-height: 58dvh; }
+  }
+
+  /* Layar sentuh: jangan "menempel" efek hover setelah diketuk */
+  @media (hover: none) {
+    .product-card:hover { transform: none; box-shadow: none; border-color: var(--border); }
+  }
+
+  /* Tablet kecil (600-900px): lebih lega */
+  @media (min-width: 600px) and (max-width: 900px) {
+    #product-grid { grid-template-columns: repeat(3, 1fr); }
+    #attendance-grid { grid-template-columns: repeat(2, 1fr); }
+    .stat-grid { grid-template-columns: repeat(3, 1fr); }
+    .stat-card { display: block; }
+    .stat-card .stat-val { text-align: left; margin-top: 4px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kasir-right { transition: none !important; }
+  }
+
+  /* HP posisi landscape (layar pendek): seluruh panel keranjang bisa digulir
+     supaya daftar item dan tombol "Selesaikan Transaksi" tetap terjangkau */
+  @media (max-width: 900px) and (max-height: 560px) {
+    .kasir-right { max-height: 96vh; max-height: 96dvh; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    #cart-items { flex: 0 0 auto; overflow: visible; }
+    .cart-header { position: sticky; top: 0; z-index: 1; background: var(--bg-surface); }
+    .camera-frame { max-height: 50vh; max-height: 50dvh; }
+  }

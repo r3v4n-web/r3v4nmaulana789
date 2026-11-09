@@ -2,6 +2,10 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2B1B12">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Smart Cashier — Vanilla JS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -51,17 +55,17 @@
       </div>
     </div>
     <nav>
-      <button data-page="kasir" class="active">🛒 Kasir</button>
-      <button data-page="produk">📦 Produk</button>
-      <button data-page="bahanbaku">🌾 Stok Bahan Baku</button>
-      <button data-page="absensi">🧑‍💼 Absensi</button>
-      <button data-page="riwayat">🕘 Riwayat</button>
-      <button data-page="laporan">📊 Laporan</button>
+      <button data-page="kasir" class="active"><span class="ni">🛒</span><span class="nl">Kasir</span></button>
+      <button data-page="produk"><span class="ni">📦</span><span class="nl">Produk</span></button>
+      <button data-page="bahanbaku"><span class="ni">🌾</span><span class="nl">Stok Bahan Baku</span></button>
+      <button data-page="absensi"><span class="ni">🧑‍💼</span><span class="nl">Absensi</span></button>
+      <button data-page="riwayat"><span class="ni">🕘</span><span class="nl">Riwayat</span></button>
+      <button data-page="laporan"><span class="ni">📊</span><span class="nl">Laporan</span></button>
     </nav>
     <div class="logout-wrap">
-      <div id="user-info" style="font-size:12px; font-weight:500; padding:4px 4px 2px; text-align:center; color:#F3E9DC;"></div>
-      <div id="db-status" style="font-size:11px; padding:0 4px 10px; text-align:center;"></div>
-      <button class="logout" id="logout-btn">↩ Keluar</button>
+      <div id="user-info"></div>
+      <div id="db-status" title="Status koneksi database"></div>
+      <button class="logout" id="logout-btn" aria-label="Keluar" title="Keluar"><span class="lo-ico">↩</span><span class="lo-text">Keluar</span></button>
     </div>
   </div>
 
@@ -82,8 +86,13 @@
         </div>
         <div id="product-grid"></div>
       </div>
+      <button type="button" id="cart-bar">
+        <span class="cb-info"><span class="cb-count" id="cb-count">0 item</span><span class="cb-hint">Lihat keranjang</span></span>
+        <span class="cb-total" id="cb-total">Rp0</span>
+      </button>
+      <div id="cart-backdrop"></div>
       <div class="kasir-right">
-        <div class="cart-header">Keranjang</div>
+        <div class="cart-header"><span>Keranjang</span><button type="button" id="cart-close" aria-label="Tutup keranjang">✕</button></div>
         <div id="cart-items"></div>
         <div class="cart-summary">
           <div class="sum-row">
@@ -405,7 +414,7 @@
       <button id="camera-x">✕</button>
     </div>
     <div class="camera-frame">
-      <video id="camera-video" autoplay playsinline></video>
+      <video id="camera-video" autoplay playsinline muted></video>
       <img id="camera-preview" style="display:none;">
     </div>
     <canvas id="camera-canvas" style="display:none;"></canvas>

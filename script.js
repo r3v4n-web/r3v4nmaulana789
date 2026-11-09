@@ -339,7 +339,8 @@ function applyRoleUI() {
   document.querySelectorAll("#sidebar nav button").forEach((btn) => {
     btn.style.display = canOpenPage(btn.dataset.page) ? "" : "none";
   });
-  $("user-info").textContent = currentUser.fullName + " · " + access.label;
+  $("user-info").textContent = currentUser.fullName;
+  $("user-info").dataset.role = access.label;
   $("add-product-btn").style.display = can("editProducts") ? "" : "none";
   $("add-material-btn").style.display = can("manageMaterials") ? "" : "none";
   $("add-employee-btn").style.display = can("manageEmployees") ? "" : "none";
@@ -352,7 +353,10 @@ function applyRoleUI() {
   // hanya melihat Pengeluaran (tanpa tab Penjualan dan tanpa ringkasan laba).
   const sales = can("salesReport");
   document.querySelectorAll("#sidebar nav button").forEach((btn) => {
-    if (btn.dataset.page === "laporan") btn.textContent = sales ? "📊 Laporan" : "💸 Pengeluaran";
+    if (btn.dataset.page !== "laporan") return;
+    const ico = btn.querySelector(".ni"), lbl = btn.querySelector(".nl");
+    if (ico) ico.textContent = sales ? "📊" : "💸";
+    if (lbl) lbl.textContent = sales ? "Laporan" : "Pengeluaran";
   });
   $("report-title").textContent = sales ? "Laporan" : "Pengeluaran";
   $("report-tabs").style.display = sales ? "" : "none";
@@ -363,6 +367,7 @@ function applyRoleUI() {
 $("logout-btn").addEventListener("click", () => {
   currentUser = null;
   cart = [];
+  $("page-kasir").classList.remove("cart-open", "has-items");
   $("discount-input").value = 0;
   $("tax-input").value = 0;
   $("paid-input").value = "";
@@ -495,6 +500,14 @@ function renderCart() {
   const { subtotal, total } = calcTotals();
   $("subtotal-val").textContent = rupiah(subtotal);
   $("total-val").textContent = rupiah(total);
+
+  // Tampilan HP: bar ringkas di bawah daftar produk (jumlah item + total)
+  const itemCount = cart.reduce((n, i) => n + i.qty, 0);
+  $("page-kasir").classList.toggle("has-items", itemCount > 0);
+  if (itemCount === 0) $("page-kasir").classList.remove("cart-open");
+  $("cb-count").textContent = itemCount + " item";
+  $("cb-total").textContent = rupiah(total);
+
   updatePaymentUI(total);
   renderProductGrid(); // refresh stok badge kalau ada perubahan
 }
@@ -532,6 +545,11 @@ function updatePaymentUI(total) {
 
   $("finish-btn").disabled = !valid;
 }
+
+/* Tampilan HP: keranjang berupa panel yang naik dari bawah */
+$("cart-bar").addEventListener("click", () => $("page-kasir").classList.add("cart-open"));
+$("cart-close").addEventListener("click", () => $("page-kasir").classList.remove("cart-open"));
+$("cart-backdrop").addEventListener("click", () => $("page-kasir").classList.remove("cart-open"));
 
 $("discount-input").addEventListener("input", renderCart);
 $("tax-input").addEventListener("input", renderCart);
@@ -1253,7 +1271,7 @@ async function openCamera(employeeId, type) {
     $("camera-video").srcObject = cameraStream;
   } catch (err) {
     $("camera-error").textContent =
-      "Kamera tidak bisa diakses. Pastikan browser diberi izin kamera, dan halaman ini dibuka lewat http:// atau https:// (bukan langsung dari file), karena browser memblokir akses kamera di luar itu.";
+      "Kamera tidak bisa diakses. Pastikan browser diberi izin kamera. Di HP, kamera hanya berfungsi kalau halaman dibuka lewat alamat https:// (atau localhost), bukan lewat file atau http:// biasa.";
     $("camera-shoot").style.display = "none";
   }
 }
@@ -1275,10 +1293,14 @@ $("camera-x").addEventListener("click", closeCamera);
 $("camera-shoot").addEventListener("click", () => {
   const video = $("camera-video");
   const canvas = $("camera-canvas");
-  canvas.width = video.videoWidth || 480;
-  canvas.height = video.videoHeight || 360;
+  // Kamera HP bisa menghasilkan foto 1920px+; diperkecil ke maks. 640px agar
+  // database dan halaman Absensi tetap ringan.
+  const vw = video.videoWidth || 480, vh = video.videoHeight || 360;
+  const scale = Math.min(1, 640 / Math.max(vw, vh));
+  canvas.width = Math.round(vw * scale);
+  canvas.height = Math.round(vh * scale);
   canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
-  capturedPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+  capturedPhotoDataUrl = canvas.toDataURL("image/jpeg", 0.7);
 
   $("camera-preview").src = capturedPhotoDataUrl;
   $("camera-preview").style.display = "block";
