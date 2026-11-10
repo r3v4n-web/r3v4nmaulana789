@@ -5,14 +5,29 @@
    yang sesuai supaya tampilan ikut ter-update. */
 
 let products = [
-  { id: "p1", name: "Es Teh Manis", code: "MNM-01", price: 5000, stock: 42, category: "Non Coffee" },
-  { id: "p2", name: "Nasi Goreng", code: "MKN-01", price: 15000, stock: 18, category: "Makanan Berat" },
-  { id: "p3", name: "Kopi Hitam", code: "MNM-02", price: 8000, stock: 30, category: "Coffee" },
-  { id: "p4", name: "Roti Bakar", code: "MKN-02", price: 12000, stock: 7, category: "Camilan/Snack" },
-  { id: "p5", name: "Air Mineral 600ml", code: "MNM-03", price: 4000, stock: 60, category: "Non Coffee" },
-  { id: "p6", name: "Kerupuk", code: "SNK-01", price: 3000, stock: 25, category: "Camilan/Snack" },
-  { id: "p7", name: "Kopi Susu Gula Aren", code: "MNM-04", price: 10000, stock: 24, category: "Coffee" },
-  { id: "p8", name: "Ayam Geprek", code: "MKN-03", price: 18000, stock: 12, category: "Makanan Berat" },
+  { id: "c01", name: "Aiskopi Saerah", code: "CFE-01", price: 15000, stock: 50, category: "Coffee" },
+  { id: "c02", name: "Aiskopi Pistachio", code: "CFE-02", price: 18000, stock: 50, category: "Coffee" },
+  { id: "c03", name: "Aiskopi Keju", code: "CFE-03", price: 20000, stock: 50, category: "Coffee" },
+  { id: "c04", name: "V60", code: "CFE-04", price: 20000, stock: 50, category: "Coffee" },
+  { id: "c05", name: "V - Drip", code: "CFE-05", price: 10000, stock: 50, category: "Coffee" },
+  { id: "c06", name: "Affogatto", code: "CFE-06", price: 18000, stock: 50, category: "Coffee" },
+  { id: "c07", name: "Tubruk Klasik", code: "CFE-07", price: 8000, stock: 50, category: "Coffee" },
+  { id: "c08", name: "Tubruk Arabika", code: "CFE-08", price: 10000, stock: 50, category: "Coffee" },
+  { id: "c09", name: "Tubruk Hitam", code: "CFE-09", price: 6000, stock: 50, category: "Coffee" },
+  { id: "c10", name: "Americano", code: "CFE-10", price: 15000, stock: 50, category: "Coffee" },
+  { id: "c11", name: "Americano Series", code: "CFE-11", price: 20000, stock: 50, category: "Coffee" },
+  { id: "n01", name: "Sweet Matcha", code: "NCF-01", price: 15000, stock: 50, category: "Non Coffee" },
+  { id: "n02", name: "Coklat Cookies", code: "NCF-02", price: 15000, stock: 50, category: "Non Coffee" },
+  { id: "n03", name: "Strawberry", code: "NCF-03", price: 15000, stock: 50, category: "Non Coffee" },
+  { id: "n04", name: "Manggo Yakult", code: "NCF-04", price: 15000, stock: 50, category: "Non Coffee" },
+  { id: "n05", name: "Lemon Tea", code: "NCF-05", price: 12000, stock: 50, category: "Non Coffee" },
+  { id: "n06", name: "Manggo Tea", code: "NCF-06", price: 13000, stock: 50, category: "Non Coffee" },
+  { id: "n07", name: "Ice Tea", code: "NCF-07", price: 5000, stock: 50, category: "Non Coffee" },
+  { id: "n08", name: "Lemonade", code: "NCF-08", price: 13000, stock: 50, category: "Non Coffee" },
+  { id: "n09", name: "Manggonade", code: "NCF-09", price: 13000, stock: 50, category: "Non Coffee" },
+  { id: "s01", name: "French Fries", code: "SNK-01", price: 18000, stock: 50, category: "Camilan/Snack" },
+  { id: "s02", name: "Tahu Walik", code: "SNK-02", price: 13000, stock: 50, category: "Camilan/Snack" },
+  { id: "s03", name: "Dougnut", code: "SNK-03", price: 10000, stock: 50, category: "Camilan/Snack" },
 ];
 
 let cart = [];               // isi keranjang saat ini
@@ -68,6 +83,13 @@ const ROLE_ACCESS = {
     editProducts: false, manageMaterials: false, adjustStock: true, manageEmployees: false, salesReport: false, deleteTransactions: false, deleteAttendance: false,
   },
 };
+/* Ikon menu (garis, mengikuti warna teks). Laporan berganti jadi dompet untuk peran
+   yang hanya boleh melihat Pengeluaran. */
+const svgIcon = (inner) =>
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + inner + "</svg>";
+const NAV_ICON_LAPORAN = svgIcon('<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>');
+const NAV_ICON_PENGELUARAN = svgIcon('<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>');
+
 const can = (perm) => !!(currentUser && ROLE_ACCESS[currentUser.role] && ROLE_ACCESS[currentUser.role][perm]);
 const canOpenPage = (page) => !!(currentUser && ROLE_ACCESS[currentUser.role] && ROLE_ACCESS[currentUser.role].pages.includes(page));
 
@@ -356,7 +378,7 @@ function applyRoleUI() {
   document.querySelectorAll("#sidebar nav button").forEach((btn) => {
     if (btn.dataset.page !== "laporan") return;
     const ico = btn.querySelector(".ni"), lbl = btn.querySelector(".nl");
-    if (ico) ico.textContent = sales ? "📊" : "💸";
+    if (ico) ico.innerHTML = sales ? NAV_ICON_LAPORAN : NAV_ICON_PENGELUARAN;
     if (lbl) lbl.textContent = sales ? "Laporan" : "Pengeluaran";
   });
   $("report-title").textContent = sales ? "Laporan" : "Pengeluaran";
@@ -1358,9 +1380,9 @@ function renderAbsensi() {
 
     let actionHtml;
     if (!rec) {
-      actionHtml = `<button class="ec-btn checkin" data-action="checkin">📷 Absen Masuk</button>`;
+      actionHtml = `<button class="ec-btn checkin" data-action="checkin"> Absen Masuk</button>`;
     } else if (!rec.checkOut) {
-      actionHtml = `<button class="ec-btn checkout" data-action="checkout">📷 Absen Pulang</button>`;
+      actionHtml = `<button class="ec-btn checkout" data-action="checkout"> Absen Pulang</button>`;
     } else {
       actionHtml = `<button class="ec-btn done" disabled>Selesai hari ini</button>`;
     }

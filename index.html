@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#2B1B12">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Smart Cashier — Vanilla JS</title>
+<title>Smart Cashier | SCH</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -70,17 +70,17 @@
       </div>
     </div>
     <nav>
-      <button data-page="kasir" class="active"><span class="ni">🛒</span><span class="nl">Kasir</span></button>
-      <button data-page="produk"><span class="ni">📦</span><span class="nl">Produk</span></button>
-      <button data-page="bahanbaku"><span class="ni">🌾</span><span class="nl">Stok Bahan Baku</span></button>
-      <button data-page="absensi"><span class="ni">🧑‍💼</span><span class="nl">Absensi</span></button>
-      <button data-page="riwayat"><span class="ni">🕘</span><span class="nl">Riwayat</span></button>
-      <button data-page="laporan"><span class="ni">📊</span><span class="nl">Laporan</span></button>
+      <button data-page="kasir" class="active"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></span><span class="nl">Kasir</span></button>
+      <button data-page="produk"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></span><span class="nl">Produk</span></button>
+      <button data-page="bahanbaku"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 8.35V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8.35A2 2 0 0 1 3.26 6.5l8-3.2a2 2 0 0 1 1.48 0l8 3.2A2 2 0 0 1 22 8.35Z"/><path d="M6 18h12"/><path d="M6 14h12"/><rect width="12" height="12" x="6" y="10"/></svg></span><span class="nl">Stok Bahan Baku</span></button>
+      <button data-page="absensi"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 11 2 2 4-4"/><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></span><span class="nl">Absensi</span></button>
+      <button data-page="riwayat"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg></span><span class="nl">Riwayat</span></button>
+      <button data-page="laporan"><span class="ni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span><span class="nl">Laporan</span></button>
     </nav>
     <div class="logout-wrap">
       <div id="user-info"></div>
       <div id="db-status" title="Status koneksi database"></div>
-      <button class="logout" id="logout-btn" aria-label="Keluar" title="Keluar"><span class="lo-ico">↩</span><span class="lo-text">Keluar</span></button>
+      <button class="logout" id="logout-btn" aria-label="Keluar" title="Keluar"><span class="lo-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg></span><span class="lo-text">Keluar</span></button>
     </div>
   </div>
 
@@ -224,8 +224,8 @@
       </div>
 
       <div class="report-tabs" id="report-tabs">
-        <button class="report-tab active" data-rtab="penjualan">📊 Penjualan</button>
-        <button class="report-tab" data-rtab="pengeluaran">💸 Pengeluaran</button>
+        <button class="report-tab active" data-rtab="penjualan"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></span>Penjualan</button>
+        <button class="report-tab" data-rtab="pengeluaran"><span class="ti"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/></svg></span>Pengeluaran</button>
       </div>
 
       <!-- Tab Penjualan (isi lama) -->
@@ -436,7 +436,7 @@
     <p id="camera-error" class="camera-error"></p>
     <div class="receipt-actions">
       <button id="camera-retake" style="display:none;">↺ Ambil Ulang</button>
-      <button id="camera-shoot">📷 Ambil Foto</button>
+      <button id="camera-shoot">Ambil Foto</button>
       <button id="camera-confirm" style="display:none;">✓ Gunakan Foto</button>
     </div>
   </div>

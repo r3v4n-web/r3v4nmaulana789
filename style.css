@@ -537,8 +537,14 @@
   .cart-header { display: flex; justify-content: space-between; align-items: center; }
   #cart-close, #cart-bar, #cart-backdrop { display: none; }
   .login-hero { display: none; }
-  #sidebar nav button, #sidebar .logout { gap: 4px; }   /* sama seperti spasi biasa di desktop */
-  #sidebar .logout .lo-ico { font-size: 14px; }
+  #sidebar nav button { gap: 12px; }
+  #sidebar .logout { gap: 8px; }
+  .ni, .lo-ico { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .ni svg { width: 20px; height: 20px; display: block; }
+  .lo-ico svg { width: 18px; height: 18px; display: block; }
+  .report-tab { display: inline-flex; align-items: center; gap: 8px; }
+  .ti { display: inline-flex; flex-shrink: 0; }
+  .ti svg { width: 16px; height: 16px; display: block; }
 
 
   /* =====================================================================
@@ -611,7 +617,7 @@
       border: 1px solid rgba(255,255,255,0.18); border-radius: 10px;
     }
     #sidebar .logout .lo-text { display: none; }
-    #sidebar .logout .lo-ico { font-size: 16px; }
+    #sidebar .logout .lo-ico svg { width: 18px; height: 18px; }
 
     #content { order: 2; flex: 1 1 auto; min-height: 0; height: auto; display: flex; flex-direction: column; }
     .page { height: auto; }
@@ -622,20 +628,20 @@
 
     #sidebar nav {
       order: 3; flex: 0 0 auto; flex-direction: row; gap: 2px;
-      padding: 6px 6px calc(6px + env(safe-area-inset-bottom, 0px));
+      padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
       background: var(--bg-surface); border-top: 1px solid var(--border);   /* ikut mode gelap/terang */
       position: relative; z-index: 20;
     }
     #sidebar nav button {
-      flex: 1 1 0; min-width: 0; min-height: 52px; padding: 6px 2px; gap: 2px;
+      flex: 1 1 0; min-width: 0; min-height: 52px; padding: 6px 1px; gap: 2px;
       flex-direction: column; justify-content: center; align-items: center;
       border-radius: 10px; font-size: 10px; line-height: 1.15; text-align: center;
     }
     #sidebar nav button { background: transparent; color: var(--text-secondary); }
     #sidebar nav button:hover { background: transparent; }
     #sidebar nav button.active { background: var(--accent); color: var(--accent-contrast); font-weight: 600; }
-    #sidebar nav button .ni { font-size: 19px; line-height: 1; }
-    #sidebar nav button .nl { display: block; max-width: 100%; overflow-wrap: anywhere; }
+    #sidebar nav button .ni svg { width: 22px; height: 22px; }
+    #sidebar nav button .nl { display: block; max-width: 100%; overflow-wrap: normal; word-break: normal; }   /* tidak memotong di tengah kata */
 
     /* ----- Kasir ----- */
     #page-kasir { position: relative; }
@@ -982,3 +988,8 @@
     /* Fokus keyboard terlihat jelas (Tab) */
     button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   }
+
+  /* Layar HP sempit: label menu sedikit lebih kecil agar kata panjang
+     ("Pengeluaran", "Bahan Baku") tidak terpotong di tengah kata */
+  @media (max-width: 400px) { #sidebar nav button { font-size: 9.5px; } }
+  @media (max-width: 350px) { #sidebar nav button { font-size: 9px; letter-spacing: -0.2px; } #sidebar nav button.active { font-weight: 500; } }
